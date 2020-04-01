@@ -35,6 +35,11 @@ body {
     color: white;
 }
 
+#navbar button.active {
+    background-color: #3498db;
+    color: white;
+}
+
 #content {
     max-width: 500px;
     margin: 0 auto;
