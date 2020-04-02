@@ -8,6 +8,8 @@ DOM = {
     btnEasy: document.querySelector(".btn-easy"),
     btnHard: document.querySelector(".btn-hard"),
     scoreDisplay: document.querySelector(".score"),
+    winAudio: document.querySelector("#winAudio"),
+    clickAudio: document.querySelector("#clickAudio")
 }
 
 var dispRGB = [];
@@ -25,10 +27,11 @@ function setEventListeners() {
 
     for (i = 0; i < DOM.squareDisplay.length; i++) {
         var tempRGB = [];
-        DOM.squareDisplay[i].addEventListener("click", function() {
+        DOM.squareDisplay[i].addEventListener("click", function() {           
             if (!isGameWon) {
+                DOM.clickAudio.load();
+                DOM.clickAudio.play();
                 trial++;
-                console.log(DOM.squareDisplay);
                 tempRGB = this.style.backgroundColor.match(/\((.*?)\)/)[1].split(",").map(Number);
                 if (tempRGB[0] === dispRGB[0] && tempRGB[1] === dispRGB[1] && tempRGB[2] === dispRGB[2]) {
                     gameWon();
@@ -104,6 +107,7 @@ function tryAgain() {
         if (i === randomSquare) styleBackground(el, dispRGB);
         else styleBackground(el, getRandomRGB());
     });
+    DOM.winAudio.pause();
 }
 
 function styleBackground(el, rgbArr) {
@@ -118,6 +122,8 @@ function gameWon() {
     DOM.squareDisplay.forEach(el => styleBackground(el, dispRGB));
     styleBackground(DOM.header, dispRGB);
     DOM.scoreDisplay.textContent = score + " / " + round;
+    DOM.winAudio.load();
+    DOM.winAudio.play();
 }
 
 function getRandomRGB() {
