@@ -23,7 +23,7 @@ body {
 }
 
 #navbar button {
-    padding: 0.8rem;
+    padding: 0.7rem;
     border: 0;
     background-color: white;
     color: black;
@@ -62,7 +62,7 @@ body {
 }
 
 h1 {
-    font-size: 2.5rem;
+    font-size: 2.4rem;
     line-height: 0.07rem;
     color: white;
     letter-spacing: 0.05rem;
