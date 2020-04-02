@@ -1,6 +1,7 @@
 DOM = {
     rgbDisplay: document.querySelector(".rgb-label"),
-    squareDisplay: document.querySelectorAll(".square"),
+    squareDisplay: document.getElementsByClassName('square'),
+    selectedDisplay: document.getElementsByClassName('selected-square'),
     header: document.querySelector("#header"),
     content: document.querySelector("#content"),
     btnNew: document.querySelector(".btn-new"),
@@ -10,7 +11,8 @@ DOM = {
     scoreDisplay: document.querySelector("#score-display"),
     roundDisplay: document.querySelector("#round-display"),
     winAudio: document.querySelector("#winAudio"),
-    clickAudio: document.querySelector("#clickAudio")
+    clickAudio: document.getElementById("clickAudio"),
+
 }
 
 var dispRGB = [];
@@ -18,26 +20,30 @@ var score = 0;
 var trial = 0;
 var round = 0;
 var isGameWon = false;
-var headerRGB = [41, 128, 185]
+var headerRGB = [41, 128, 185];
+var squareDisplayArray = [];
+var selectedDisplayArray = [];
 initGame();
 
 
 function setEventListeners() {
 
-    for (i = 0; i < DOM.squareDisplay.length; i++) {
+    for (i = 0; i < squareDisplayArray.length; i++) {
         var tempRGB = [];
-        DOM.squareDisplay[i].addEventListener("click", function() {           
+        var selectedItem;
+        squareDisplayArray[i].addEventListener("click", function() {           
             if (!isGameWon) {
                 DOM.clickAudio.load();
                 DOM.clickAudio.play();
                 trial++;
                 tempRGB = this.style.backgroundColor.match(/\((.*?)\)/)[1].split(",").map(Number);
-                if (tempRGB[0] === dispRGB[0] && tempRGB[1] === dispRGB[1] && tempRGB[2] === dispRGB[2]) {
-                    gameWon();
-                } else {
-                    this.style.backgroundColor = "rgb(0, 0, 0)";
-                    this.style.transition = "background-color 500ms linear";
-                    this.style.border = "none";
+                if (tempRGB[0] === dispRGB[0] && tempRGB[1] === dispRGB[1] && tempRGB[2] === dispRGB[2]) {                                        
+                    gameWon();                    
+                } else {                    
+                    this.classList.remove("square");
+                    this.classList.add("selected-square");                      
+                    selectedItem = DOM.selectedDisplay;     
+                    selectedDisplayArray = Array.from(selectedItem);                                            
                 }
             }
         });
@@ -47,12 +53,8 @@ function setEventListeners() {
     DOM.btnTry.addEventListener("click", tryAgain);
 
     // Listening to click of Button -Easy & Hard
-    DOM.btnEasy.addEventListener("click", function() {
-        deleteSquareRow();
-    });
-    DOM.btnHard.addEventListener("click", function() {
-        addSquareRow();
-    });
+    DOM.btnEasy.addEventListener("click",deleteSquareRow);
+    DOM.btnHard.addEventListener("click", addSquareRow);
 
 }
 
@@ -65,7 +67,7 @@ function addSquareRow() {
         for (var i = 0; i < 3; i++) {
             DOM.content.insertAdjacentHTML("afterbegin", html);
         }
-        DOM.squareDisplay = document.querySelectorAll(".square");
+        DOM.squareDisplay = document.getElementsByClassName("square");
         initGame();
         setEventListeners();
     }
@@ -78,7 +80,7 @@ function deleteSquareRow() {
         for (var i = 0; i < 3; i++) {
             DOM.squareDisplay[i].remove();
         }
-        DOM.squareDisplay = document.querySelectorAll(".square");
+        DOM.squareDisplay = document.getElementsByClassName("square");
         initGame();
         setEventListeners();
     }
@@ -93,7 +95,7 @@ function initGame() {
     setEventListeners();
 }
 
-function tryAgain() {
+function tryAgain() {    
     trial = 0;  // Number to clicks it takes to win a game
     isGameWon = false;
 
@@ -102,8 +104,10 @@ function tryAgain() {
 
     DOM.rgbDisplay.textContent = dispRGB[0] + ", " + dispRGB[1] + ", " + dispRGB[2];
     styleBackground(DOM.header, headerRGB);
-
-    DOM.squareDisplay.forEach(function(el, i) {
+   
+    squareDisplayArray = Array.from(DOM.squareDisplay);
+    
+    squareDisplayArray.forEach(function(el, i) {
         if (i === randomSquare) styleBackground(el, dispRGB);
         else styleBackground(el, getRandomRGB());
     });
@@ -118,8 +122,15 @@ function gameWon() {
     round++;
     if (trial == 1) score++;
     isGameWon = true;
-
-    DOM.squareDisplay.forEach(el => styleBackground(el, dispRGB));
+    
+    if(selectedDisplayArray){
+        selectedDisplayArray.forEach(function(item) {
+            item.classList.remove("selected-square");
+            item.classList.add("square");
+        });
+    }
+    
+    squareDisplayArray.forEach(el => styleBackground(el, dispRGB));
     styleBackground(DOM.header, dispRGB);
     DOM.scoreDisplay.textContent = score;
     DOM.roundDisplay.textContent = round;
@@ -134,3 +145,4 @@ function getRandomRGB() {
 function getRandomNumber(val = 256) {
     return Math.floor(Math.random() * val);
 }
+

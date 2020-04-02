@@ -50,7 +50,6 @@ body {
     width: 28.6%;
     margin: 1.6%;
     padding-bottom: 29%;
-    background: #e67e22;
     border: 2px solid black;
     border-radius: 15px;
     float: left;
@@ -115,4 +114,10 @@ img{
 #score-board {
     font-size: 0.75rem;
     text-transform: uppercase;
+}
+
+.selected-square {
+    background-color: rgb(0, 0, 0);
+    transition: background-color 500ms linear;
+    border: 2px solid rgb(0, 0, 0);
 }
