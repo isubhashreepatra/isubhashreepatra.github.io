@@ -7,7 +7,8 @@ DOM = {
     btnTry: document.querySelector(".btn-try"),
     btnEasy: document.querySelector(".btn-easy"),
     btnHard: document.querySelector(".btn-hard"),
-    scoreDisplay: document.querySelector(".score"),
+    scoreDisplay: document.querySelector("#score-display"),
+    roundDisplay: document.querySelector("#round-display"),
     winAudio: document.querySelector("#winAudio"),
     clickAudio: document.querySelector("#clickAudio")
 }
@@ -86,7 +87,8 @@ function deleteSquareRow() {
 function initGame() {
     score = 0;
     round = 0;
-    DOM.scoreDisplay.textContent = score + " / " + round;
+    DOM.scoreDisplay.textContent = score;
+    DOM.roundDisplay.textContent = round;
     tryAgain();
     setEventListeners();
 }
@@ -119,7 +121,8 @@ function gameWon() {
 
     DOM.squareDisplay.forEach(el => styleBackground(el, dispRGB));
     styleBackground(DOM.header, dispRGB);
-    DOM.scoreDisplay.textContent = score + " / " + round;
+    DOM.scoreDisplay.textContent = score;
+    DOM.roundDisplay.textContent = round;
     DOM.winAudio.load();
     DOM.winAudio.play();
 }

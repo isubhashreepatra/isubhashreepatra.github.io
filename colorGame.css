@@ -73,14 +73,22 @@ h4 {
     letter-spacing: 0.15rem;
 }
 
-.score {
-    margin: auto 0.5rem;
-    border: 1px solid #3498db;
-    border-radius: 5px;
-    vertical-align: middle;
+#score {
+    max-width: 150px;
+    height: 60px;
+    border: 2px solid whitesmoke;
+    color: white;
+    border-radius: 10px;
     font-size: 1.2rem;
     font-weight: bold;
-    padding: 3px 5px;
+    padding: 8px;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin-top: 5px;
 }
 
 .hideSquare {
@@ -97,4 +105,14 @@ h4 {
 
 .rules h3 {
     text-align: center;
+}
+
+img{
+    width: 40px;
+    height: 100%;
+}
+
+#score-board {
+    font-size: 0.75rem;
+    text-transform: uppercase;
 }
