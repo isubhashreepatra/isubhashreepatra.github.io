@@ -36,6 +36,7 @@ function setEventListeners() {
                 } else {
                     this.style.backgroundColor = "rgb(0, 0, 0)";
                     this.style.transition = "background-color 500ms linear";
+                    this.style.border = "none";
                 }
             }
         });
