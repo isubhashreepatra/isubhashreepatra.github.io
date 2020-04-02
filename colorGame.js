@@ -22,8 +22,6 @@ initGame();
 
 
 function setEventListeners() {
-    console.log("This is starting");
-    console.log(DOM.squareDisplay);
 
     for (i = 0; i < DOM.squareDisplay.length; i++) {
         var tempRGB = [];
@@ -63,7 +61,7 @@ function addSquareRow() {
         DOM.btnEasy.classList.remove("active");
         var html = '<div class="square"></div>';
         for (var i = 0; i < 3; i++) {
-            DOM.content.insertAdjacentHTML("beforeend", html);
+            DOM.content.insertAdjacentHTML("afterbegin", html);
         }
         DOM.squareDisplay = document.querySelectorAll(".square");
         initGame();
@@ -100,7 +98,6 @@ function tryAgain() {
     var randomSquare = getRandomNumber(DOM.squareDisplay.length);
 
     DOM.rgbDisplay.textContent = dispRGB[0] + ", " + dispRGB[1] + ", " + dispRGB[2];
-    
     styleBackground(DOM.header, headerRGB);
 
     DOM.squareDisplay.forEach(function(el, i) {
