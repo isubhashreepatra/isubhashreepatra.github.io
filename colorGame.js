@@ -3,7 +3,7 @@ DOM = {
     squareDisplay: document.getElementsByClassName('square'),
     selectedDisplay: document.getElementsByClassName('selected-square'),
     header: document.querySelector("#header"),
-    content: document.querySelector("#content"),
+    content: document.getElementById("content"),
     btnNew: document.querySelector(".btn-new"),
     btnTry: document.querySelector(".btn-try"),
     btnEasy: document.querySelector(".btn-easy"),
@@ -12,7 +12,7 @@ DOM = {
     roundDisplay: document.querySelector("#round-display"),
     winAudio: document.querySelector("#winAudio"),
     clickAudio: document.getElementById("clickAudio"),
-
+    displayArea: document.getElementById('display-area')
 }
 
 var dispRGB = [];
@@ -63,11 +63,13 @@ function addSquareRow() {
     if (DOM.squareDisplay.length === 3) {
         DOM.btnHard.classList.add("active");
         DOM.btnEasy.classList.remove("active");
-        var html = '<div class="square"></div>';
-        for (var i = 0; i < 3; i++) {
-            DOM.content.insertAdjacentHTML("afterbegin", html);
+       
+        for (var i = 0; i < 3; i++) {            
+            var newDiv = document.createElement('div');
+            newDiv.setAttribute('class', 'square');
+            DOM.displayArea.appendChild(newDiv);
         }
-        DOM.squareDisplay = document.getElementsByClassName("square");
+       
         initGame();
         setEventListeners();
     }
@@ -77,10 +79,12 @@ function deleteSquareRow() {
     if (DOM.squareDisplay.length === 6) {
         DOM.btnHard.classList.remove("active");
         DOM.btnEasy.classList.add("active");
+        var oldDiv = document.get
+
         for (var i = 0; i < 3; i++) {
-            DOM.squareDisplay[i].remove();
+            DOM.squareDisplay[i].remove();     
         }
-        DOM.squareDisplay = document.getElementsByClassName("square");
+        
         initGame();
         setEventListeners();
     }
