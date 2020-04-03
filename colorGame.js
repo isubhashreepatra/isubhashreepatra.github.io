@@ -30,7 +30,6 @@ function setEventListeners() {
 
     for (i = 0; i < squareDisplayArray.length; i++) {
         var tempRGB = [];
-        var selectedItem;
         squareDisplayArray[i].addEventListener("click", function() {           
             if (!isGameWon) {
                 DOM.clickAudio.load();
@@ -39,11 +38,9 @@ function setEventListeners() {
                 tempRGB = this.style.backgroundColor.match(/\((.*?)\)/)[1].split(",").map(Number);
                 if (tempRGB[0] === dispRGB[0] && tempRGB[1] === dispRGB[1] && tempRGB[2] === dispRGB[2]) {                                        
                     gameWon();                    
-                } else {                    
-                    this.classList.remove("square");
-                    this.classList.add("selected-square");                      
-                    selectedItem = DOM.selectedDisplay;     
-                    selectedDisplayArray = Array.from(selectedItem);                                            
+                } else {
+                    this.setAttribute('class','selected-square');                              
+                    selectedDisplayArray = Array.from(DOM.selectedDisplay);                                            
                 }
             }
         });
@@ -59,35 +56,60 @@ function setEventListeners() {
 }
 
 function addSquareRow() {
+    var numberOfSquares = DOM.squareDisplay.length;
+
+    DOM.btnHard.classList.add("active");
+    DOM.btnEasy.classList.remove("active");
     
-    if (DOM.squareDisplay.length === 3) {
-        DOM.btnHard.classList.add("active");
-        DOM.btnEasy.classList.remove("active");
-       
-        for (var i = 0; i < 3; i++) {            
+    var hiddenSquares = document.querySelectorAll(".selected-square");
+    
+    for (let index = 0; index < hiddenSquares.length; index++) {
+        hiddenSquares[index].remove();
+    }
+    
+    if (numberOfSquares >= 1 && numberOfSquares < 6) {
+        for (var i = 0; i < (6-numberOfSquares); i++) {            
             var newDiv = document.createElement('div');
             newDiv.setAttribute('class', 'square');
             DOM.displayArea.appendChild(newDiv);
         }
-       
-        initGame();
-        setEventListeners();
     }
+    initGame();
+    setEventListeners();
 }
 
 function deleteSquareRow() {
-    if (DOM.squareDisplay.length === 6) {
-        DOM.btnHard.classList.remove("active");
-        DOM.btnEasy.classList.add("active");
-        var oldDiv = document.get
 
-        for (var i = 0; i < 3; i++) {
+    DOM.btnHard.classList.remove("active");
+    DOM.btnEasy.classList.add("active");
+
+    var hiddenSquares = document.querySelectorAll(".selected-square");
+        
+    for (var i = 0; i < hiddenSquares.length; i++) {
+        hiddenSquares[i].remove();
+    }
+
+    var nRemainingSquares = DOM.squareDisplay.length;
+  
+    if (nRemainingSquares > 3 && nRemainingSquares <=6) {
+        DOM.btnHard.classList.remove("active");
+        DOM.btnEasy.classList.add("active");        
+        for (var i = 0; i < (nRemainingSquares - 3); i++) {
             DOM.squareDisplay[i].remove();     
         }
-        
-        initGame();
-        setEventListeners();
+
+    } else if (nRemainingSquares >=1 && nRemainingSquares <3) {
+        DOM.btnHard.classList.remove("active");
+        DOM.btnEasy.classList.add("active");
+        for (var i = 0; i < (3-nRemainingSquares); i++) {            
+            var newDiv = document.createElement('div');
+            newDiv.setAttribute('class', 'square');
+            DOM.displayArea.appendChild(newDiv);
+        }
+
     }
+    initGame();
+    setEventListeners();
 }
 
 function initGame() {
@@ -129,8 +151,7 @@ function gameWon() {
     
     if(selectedDisplayArray){
         selectedDisplayArray.forEach(function(item) {
-            item.classList.remove("selected-square");
-            item.classList.add("square");
+            item.setAttribute('class', 'square');
         });
     }
     
