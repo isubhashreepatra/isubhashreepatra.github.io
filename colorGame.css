@@ -46,16 +46,6 @@ body {
     padding: 20px;
 }
 
-.square {
-    width: 28.6%;
-    margin: 1.6%;
-    padding-bottom: 29%;
-    background: #e67e22;
-    border: 2px solid black;
-    border-radius: 15px;
-    float: left;
-}
-
 .square:hover {
     border: 2px solid white;
     transition: border 200ms linear;
@@ -115,4 +105,20 @@ img{
 #score-board {
     font-size: 0.75rem;
     text-transform: uppercase;
+}
+
+.selected-square {
+    border: 2px solid rgb(0, 0, 0);
+    border-radius: 15px;
+    background-color: rgb(0, 0, 0);
+    transition: background-color 500ms linear;
+}
+
+.square {
+    width: 28.6%;
+    margin: 1.6%;
+    padding-bottom: 29%;
+    border: 2px solid black;
+    border-radius: 15px;
+    float: left;
 }

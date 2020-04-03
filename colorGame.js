@@ -1,8 +1,9 @@
 DOM = {
     rgbDisplay: document.querySelector(".rgb-label"),
-    squareDisplay: document.querySelectorAll(".square"),
+    squareDisplay: document.getElementsByClassName('square'),
+    selectedDisplay: document.getElementsByClassName('selected-square'),
     header: document.querySelector("#header"),
-    content: document.querySelector("#content"),
+    content: document.getElementById("content"),
     btnNew: document.querySelector(".btn-new"),
     btnTry: document.querySelector(".btn-try"),
     btnEasy: document.querySelector(".btn-easy"),
@@ -10,7 +11,8 @@ DOM = {
     scoreDisplay: document.querySelector("#score-display"),
     roundDisplay: document.querySelector("#round-display"),
     winAudio: document.querySelector("#winAudio"),
-    clickAudio: document.querySelector("#clickAudio")
+    clickAudio: document.getElementById("clickAudio"),
+    displayArea: document.getElementById('display-area')
 }
 
 var dispRGB = [];
@@ -18,26 +20,27 @@ var score = 0;
 var trial = 0;
 var round = 0;
 var isGameWon = false;
-var headerRGB = [41, 128, 185]
+var headerRGB = [41, 128, 185];
+var squareDisplayArray = [];
+var selectedDisplayArray = [];
 initGame();
 
 
 function setEventListeners() {
 
-    for (i = 0; i < DOM.squareDisplay.length; i++) {
+    for (i = 0; i < squareDisplayArray.length; i++) {
         var tempRGB = [];
-        DOM.squareDisplay[i].addEventListener("click", function() {           
+        squareDisplayArray[i].addEventListener("click", function() {           
             if (!isGameWon) {
                 DOM.clickAudio.load();
                 DOM.clickAudio.play();
                 trial++;
                 tempRGB = this.style.backgroundColor.match(/\((.*?)\)/)[1].split(",").map(Number);
-                if (tempRGB[0] === dispRGB[0] && tempRGB[1] === dispRGB[1] && tempRGB[2] === dispRGB[2]) {
-                    gameWon();
+                if (tempRGB[0] === dispRGB[0] && tempRGB[1] === dispRGB[1] && tempRGB[2] === dispRGB[2]) {                                        
+                    gameWon();                    
                 } else {
-                    this.style.backgroundColor = "rgb(0, 0, 0)";
-                    this.style.transition = "background-color 500ms linear";
-                    this.style.border = "none";
+                    this.setAttribute('class','selected-square');                              
+                    selectedDisplayArray = Array.from(DOM.selectedDisplay);                                            
                 }
             }
         });
@@ -47,41 +50,66 @@ function setEventListeners() {
     DOM.btnTry.addEventListener("click", tryAgain);
 
     // Listening to click of Button -Easy & Hard
-    DOM.btnEasy.addEventListener("click", function() {
-        deleteSquareRow();
-    });
-    DOM.btnHard.addEventListener("click", function() {
-        addSquareRow();
-    });
+    DOM.btnEasy.addEventListener("click",deleteSquareRow);
+    DOM.btnHard.addEventListener("click", addSquareRow);
 
 }
 
 function addSquareRow() {
+    var numberOfSquares = DOM.squareDisplay.length;
+
+    DOM.btnHard.classList.add("active");
+    DOM.btnEasy.classList.remove("active");
     
-    if (DOM.squareDisplay.length === 3) {
-        DOM.btnHard.classList.add("active");
-        DOM.btnEasy.classList.remove("active");
-        var html = '<div class="square"></div>';
-        for (var i = 0; i < 3; i++) {
-            DOM.content.insertAdjacentHTML("afterbegin", html);
-        }
-        DOM.squareDisplay = document.querySelectorAll(".square");
-        initGame();
-        setEventListeners();
+    var hiddenSquares = document.querySelectorAll(".selected-square");
+    
+    for (let index = 0; index < hiddenSquares.length; index++) {
+        hiddenSquares[index].remove();
     }
+    
+    if (numberOfSquares >= 1 && numberOfSquares < 6) {
+        for (var i = 0; i < (6-numberOfSquares); i++) {            
+            var newDiv = document.createElement('div');
+            newDiv.setAttribute('class', 'square');
+            DOM.displayArea.appendChild(newDiv);
+        }
+    }
+    initGame();
+    setEventListeners();
 }
 
 function deleteSquareRow() {
-    if (DOM.squareDisplay.length === 6) {
+
+    DOM.btnHard.classList.remove("active");
+    DOM.btnEasy.classList.add("active");
+
+    var hiddenSquares = document.querySelectorAll(".selected-square");
+        
+    for (var i = 0; i < hiddenSquares.length; i++) {
+        hiddenSquares[i].remove();
+    }
+
+    var nRemainingSquares = DOM.squareDisplay.length;
+  
+    if (nRemainingSquares > 3 && nRemainingSquares <=6) {
+        DOM.btnHard.classList.remove("active");
+        DOM.btnEasy.classList.add("active");        
+        for (var i = 0; i < (nRemainingSquares - 3); i++) {
+            DOM.squareDisplay[i].remove();     
+        }
+
+    } else if (nRemainingSquares >=1 && nRemainingSquares <3) {
         DOM.btnHard.classList.remove("active");
         DOM.btnEasy.classList.add("active");
-        for (var i = 0; i < 3; i++) {
-            DOM.squareDisplay[i].remove();
+        for (var i = 0; i < (3-nRemainingSquares); i++) {            
+            var newDiv = document.createElement('div');
+            newDiv.setAttribute('class', 'square');
+            DOM.displayArea.appendChild(newDiv);
         }
-        DOM.squareDisplay = document.querySelectorAll(".square");
-        initGame();
-        setEventListeners();
+
     }
+    initGame();
+    setEventListeners();
 }
 
 function initGame() {
@@ -93,7 +121,7 @@ function initGame() {
     setEventListeners();
 }
 
-function tryAgain() {
+function tryAgain() {    
     trial = 0;  // Number to clicks it takes to win a game
     isGameWon = false;
 
@@ -102,8 +130,10 @@ function tryAgain() {
 
     DOM.rgbDisplay.textContent = dispRGB[0] + ", " + dispRGB[1] + ", " + dispRGB[2];
     styleBackground(DOM.header, headerRGB);
-
-    DOM.squareDisplay.forEach(function(el, i) {
+   
+    squareDisplayArray = Array.from(DOM.squareDisplay);
+    
+    squareDisplayArray.forEach(function(el, i) {
         if (i === randomSquare) styleBackground(el, dispRGB);
         else styleBackground(el, getRandomRGB());
     });
@@ -118,8 +148,14 @@ function gameWon() {
     round++;
     if (trial == 1) score++;
     isGameWon = true;
-
-    DOM.squareDisplay.forEach(el => styleBackground(el, dispRGB));
+    
+    if(selectedDisplayArray){
+        selectedDisplayArray.forEach(function(item) {
+            item.setAttribute('class', 'square');
+        });
+    }
+    
+    squareDisplayArray.forEach(el => styleBackground(el, dispRGB));
     styleBackground(DOM.header, dispRGB);
     DOM.scoreDisplay.textContent = score;
     DOM.roundDisplay.textContent = round;
@@ -134,3 +170,4 @@ function getRandomRGB() {
 function getRandomNumber(val = 256) {
     return Math.floor(Math.random() * val);
 }
+
